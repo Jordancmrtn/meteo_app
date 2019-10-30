@@ -1,5 +1,7 @@
 import React, { Fragment }from 'react';
 import axios from 'axios'
+import { swing } from 'react-animations';
+import Radium, {StyleRoot} from 'radium';
 
 import './Weather.css';
 
@@ -29,7 +31,13 @@ class Weather extends React.Component {
     this.date = this.now.getDate()
     this.annee = this.now.getFullYear();
     this.mois = this.now.getMonth() + 1;
-  }
+
+    this.styles = {
+      swing: {
+        animation: 'x 4s',
+        animationName: Radium.keyframes(swing, 'swing')
+      }
+    }  }
 
   componentDidMount = () => {
     navigator.geolocation.getCurrentPosition((position) => {
@@ -59,11 +67,14 @@ class Weather extends React.Component {
   render(){
     return(
       <Fragment>
+        
         <h1 className="title">WHAT'S THE<br/>WEATHER ?</h1>
         <div className="card">
           <p className="cityName">{this.state.name? this.state.name : " "}</p>
           <p className="date">{this.date}/{this.mois}/{this.annee}</p>
-          <img className="imgWeather" src={`http://openweathermap.org/img/wn/${this.state.icon}@2x.png`} alt={this.state.iconDescription} />
+          <StyleRoot>
+          <img className="imgWeather" style={this.styles.swing} src={`http://openweathermap.org/img/wn/${this.state.icon}@2x.png`} alt={this.state.iconDescription} />
+          </StyleRoot>
           <p className="temparature">{this.state.temp? Math.floor(this.state.temp)+"°c" : <img className="loading" src={`${process.env.PUBLIC_URL}/assets/images/loading.gif`} /> }</p>
           <p className="trait">---------------</p>
           <p className="weatherDescription">{this.state.iconDescription}</p>
